@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --main-bg-color: #010a12;
+
+  --width: 490px;
+  --height: 98px;
+}
+
+.frame {
+  width: var(--width) !important;
+  height: var(--height) !important;
+  max-width: var(--width) !important;
+  max-height: var(--height) !important;
+}
+
+.darken {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.border-1 {
+  border-width: 1px;
+}
+
+@keyframes download {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(50px);
+  }
+}
+
+.download {
+  animation: download 0.5s linear;
+}
+
+body {
+  background-color: var(--main-bg-color);
+}

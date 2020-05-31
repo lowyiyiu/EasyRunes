@@ -1,0 +1,32 @@
+{
+  "name": "runes",
+  "version": "1.0.1",
+  "description": "Automate runes selection process for League of Legends",
+  "main": "app/js/main.js",
+  "dependencies": {
+    "@fullhuman/postcss-purgecss": "^2.2.0",
+    "autoprefixer": "^9.8.0",
+    "cssnano": "^4.1.10",
+    "electron-debug": "^3.1.0",
+    "electron-window-state": "^5.0.3",
+    "freezer-js": "^0.14.1",
+    "lcu-connector": "^2.1.3",
+    "request": "^2.88.2",
+    "tailwindcss": "^1.4.6",
+    "ws": "^7.3.0"
+  },
+  "devDependencies": {
+    "electron": "^9.0.0",
+    "electron-builder": "^22.7.0"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win",
+    "build:css": "postcss app/css/styles.css -o app/css/clean.css"
+  },
+  "author": {
+    "name": "Low Yiyiu",
+    "url": "https://github.com/lowyiyiu"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" class="frame">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <title>EasyRunes</title>
+    <!--
+    <link rel="stylesheet" href="../css/tailwind.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    -->
+    <link rel="stylesheet" href="../css/clean.css" />
+  </head>
+  <body class="frame">
+    <div class="flex flex-row darken pt-1 pb-1 px-1">
+      <div class="text-yellow-200 my-auto">EasyRunes</div>
+      <div class="mx-auto"></div>
+      <button class="my-auto mx-1 focus:outline-none" type="button" id="info"><img class="rounded-full w-4 h-4" src="../img/info.png" /></button>
+      <button class="my-auto mx-1 focus:outline-none" type="button" id="close"><img class="rounded-full w-4 h-4" src="../img/close.png" /></button>
+    </div>
+    <div class="grid grid-cols-11 gap-2 p-2 mt-1">
+      <img id="champion" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/unknown.png" />
+      <img id="perk-1" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
+      <img id="perk-2" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
+      <img id="perk-3" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
+      <img id="perk-4" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
+      <img id="perk-5" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
+      <img id="perk-6" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
+      <img id="perk-7" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
+      <img id="perk-8" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
+      <img id="perk-9" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
+      <p id="error" class="my-auto mx-auto col-span-9 text-yellow-200 hidden">Runes not found for this champion</p>
+      <button class="mx-auto focus:outline-none cursor-not-allowed p-1 rounded-md border-2 border-yellow-200 overflow-hidden" type="button" id="upload" disabled><img src="../img/send.png" id="spinner" /></button>
+    </div>
+
+    <script type="text/javascript">
+      let freezer = require("../js/state");
+      require("../js/app.js");
+
+      document.getElementById("info").addEventListener("click", () => {
+        freezer.emit("app:info");
+      });
+
+      document.getElementById("close").addEventListener("click", () => {
+        freezer.emit("app:quit");
+      });
+
+      document.getElementById("upload").addEventListener("click", () => {
+        freezer.emit("page:upload");
+      });
+    </script>
+  </body>
+</html>
