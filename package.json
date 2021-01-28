@@ -16,7 +16,7 @@
     "ws": "^7.3.0"
   },
   "devDependencies": {
-    "electron": "^9.0.0",
+    "electron": "^9.4.0",
     "electron-builder": "^22.7.0"
   },
   "scripts": {
