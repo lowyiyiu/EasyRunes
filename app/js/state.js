@@ -1,19 +1,22 @@
-var Freezer = require("freezer-js");
+/** @format */
+
+var Freezer = require('freezer-js');
 
 var state = {
   apiVersion: 0,
-  leaguePath: "C:\\Program Files (x86)\\Garena\\32771\\LeagueClient\\LeagueClient.exe",
+  // C:\\Garena\\Games\\32771\\LeagueClient\\LeagueClient.exe
+  leaguePath: '',
   summoner: {
-    displayName: "",
-    internalName: "",
+    displayName: '',
+    internalName: '',
     summonerLevel: 0,
     accountId: 0,
     summonerId: 0,
-    puuid: "",
+    puuid: '',
   },
   current: {
     session: false,
-    champion: "",
+    champion: '',
     page: {},
     updating: {},
   },

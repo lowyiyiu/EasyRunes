@@ -1,8 +1,14 @@
+/** @format */
+
 module.exports = {
-  purge: [],
+  mode: 'jit',
+  purge: ['./app/*/*.html'],
+  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
   },
-  variants: {},
+  variants: {
+    extend: {},
+  },
   plugins: [],
-}
+};

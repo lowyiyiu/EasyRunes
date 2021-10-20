@@ -1,0 +1,59 @@
+/** @format */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --main-bg-color: #010a12;
+
+  --width: 500px;
+  --height: 120px;
+}
+
+.draggable {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+.draggable > * {
+  -webkit-app-region: no-drag;
+}
+
+select,
+option,
+input {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.frame {
+  width: var(--width) !important;
+  height: var(--height) !important;
+  max-width: var(--width) !important;
+  max-height: var(--height) !important;
+}
+
+.darken {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.border-1 {
+  border-width: 1px;
+}
+
+@keyframes download {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(50px);
+  }
+}
+
+.download {
+  animation: download 0.5s linear;
+}
+
+body {
+  background-color: var(--main-bg-color);
+}

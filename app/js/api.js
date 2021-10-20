@@ -1,7 +1,9 @@
-const WebSocket = require("ws");
-const request = require("request");
+/** @format */
 
-let freezer = require("./state");
+const WebSocket = require('ws');
+const request = require('request');
+
+let freezer = require('./state');
 
 let websocket = null;
 let connection_data = null;
@@ -9,13 +11,13 @@ let methods = {};
 
 function bind(data) {
   connection_data = data;
-  websocket = new WebSocket(`wss://${data.username}:${data.password}@${data.address}:${data.port}/`, "wamp", {
+  websocket = new WebSocket(`wss://${data.username}:${data.password}@${data.address}:${data.port}/`, 'wamp', {
     rejectUnauthorized: false,
   });
 
-  websocket.on("error", (err) => {
+  websocket.on('error', (err) => {
     console.log(err);
-    if (err.message.includes("ECONNREFUSED")) {
+    if (err.message.includes('ECONNREFUSED')) {
       destroy();
       setTimeout(function () {
         bind(data);
@@ -23,7 +25,7 @@ function bind(data) {
     }
   });
 
-  websocket.on("message", (msg) => {
+  websocket.on('message', (msg) => {
     let res;
     try {
       res = JSON.parse(msg);
@@ -33,13 +35,13 @@ function bind(data) {
     if (res[0] === 0) {
       freezer.emit(`api:connected`);
     }
-    if (res[1] == "OnJsonApiEvent") {
+    if (res[1] == 'OnJsonApiEvent') {
       let evt = res[2];
       freezer.emit(`${evt.uri}:${evt.eventType}`, evt.data);
     }
   });
 
-  websocket.on("open", () => {
+  websocket.on('open', () => {
     websocket.send('[5, "OnJsonApiEvent"]');
   });
 }
@@ -49,7 +51,7 @@ function destroy() {
   websocket = null;
 }
 
-["post", "put", "get", "del"].forEach(function (method) {
+['post', 'put', 'get', 'del'].forEach(function (method) {
   methods[method] = function (endpoint, body) {
     return new Promise((resolve) => {
       let options = {
@@ -59,7 +61,7 @@ function destroy() {
           pass: connection_data.password,
         },
         headers: {
-          Accept: "application/json",
+          Accept: 'application/json',
         },
         json: true,
         body: body,

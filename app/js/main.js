@@ -1,23 +1,25 @@
-const electron = require("electron");
-const request = require("request");
-const windowStateKeeper = require("electron-window-state");
-const { app, BrowserWindow, ipcMain, dialog } = electron;
+/** @format */
 
+const electron = require('electron');
+const request = require('request');
+const windowStateKeeper = require('electron-window-state');
+const { app, BrowserWindow, ipcMain, dialog } = electron;
+let freezer = require('./state');
 let main;
 let info;
 
-request("https://ddragon.leagueoflegends.com/api/versions.json", function (error, response, data) {
+request('https://ddragon.leagueoflegends.com/api/versions.json', function (error, response, data) {
   if (!error && response && response.statusCode == 200) {
     return;
   } else {
-    dialog.showErrorBox("Error", "Unable to connect to Riot API. EasyRunes require an active internet connection. Please restart EasyRunes after connecting to the internet.");
+    dialog.showErrorBox('Error', 'Unable to connect to Riot API. EasyRunes require an active internet connection. Please restart EasyRunes after connecting to the internet.');
     app.exit(0);
   }
 });
 
 function createMainWindow() {
-  const width = 490;
-  const height = 98;
+  const width = 500;
+  const height = 120;
 
   const mainWindowState = windowStateKeeper({
     defaultWidth: width,
@@ -25,7 +27,8 @@ function createMainWindow() {
   });
 
   main = new BrowserWindow({
-    title: "EasyRunes",
+    icon: 'build\\icon.ico',
+    title: 'EasyRunes Main',
     width: width,
     height: height,
     x: 0,
@@ -35,6 +38,8 @@ function createMainWindow() {
     useContentSize: false,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
     },
     show: false,
   });
@@ -44,17 +49,17 @@ function createMainWindow() {
   main.setFullScreenable(false);
   main.setMenu(null);
 
-  main.webContents.on("did-finish-load", function () {
+  main.webContents.on('did-finish-load', function () {
     main.show();
   });
 
-  main.loadFile("./app/html/index.html");
-  //main.webContents.openDevTools();
+  main.loadFile('./app/html/index.html');
+  // main.webContents.openDevTools();
 }
 
 function createInfoWindow() {
   const infoWidth = 520;
-  const infoHeight = 600;
+  const infoHeight = 580;
 
   const infoWindowState = windowStateKeeper({
     defaultWidth: infoWidth,
@@ -62,7 +67,8 @@ function createInfoWindow() {
   });
 
   info = new BrowserWindow({
-    title: "EasyRunes",
+    icon: 'build\\icon.ico',
+    title: 'EasyRunes Info',
     width: infoWidth,
     height: infoHeight,
     x: 0,
@@ -72,6 +78,8 @@ function createInfoWindow() {
     useContentSize: false,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
     },
     show: false,
   });
@@ -82,7 +90,8 @@ function createInfoWindow() {
   info.setMenu(null);
   info.center();
 
-  info.loadFile("./app/html/info.html");
+  info.loadFile('./app/html/info.html');
+  // info.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
@@ -90,27 +99,32 @@ app.whenReady().then(() => {
   createInfoWindow();
 });
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
-app.on("activate", () => {
+app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createMainWindow();
     createInfoWindow();
   }
 });
 
-ipcMain.on("app:quit", (event, arg) => {
+ipcMain.on('app:quit', (event, arg) => {
   app.exit(0);
 });
 
-ipcMain.on("app:info", (event, arg) => {
+ipcMain.on('app:info', (event, arg) => {
   info.show();
 });
 
-ipcMain.on("app:infoquit", (event, arg) => {
+ipcMain.on('app:infoquit', (event, arg) => {
   info.hide();
+});
+
+ipcMain.on('app:restart', (event, arg) => {
+  app.relaunch();
+  app.exit();
 });

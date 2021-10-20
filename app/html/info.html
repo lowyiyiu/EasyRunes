@@ -1,3 +1,5 @@
+<!-- @format -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,14 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
     <title>EasyRunes</title>
-    <!--
-    <link rel="stylesheet" href="../css/tailwind.css" />
     <link rel="stylesheet" href="../css/styles.css" />
-    -->
-    <link rel="stylesheet" href="../css/clean.css" />
   </head>
   <body>
-    <div class="flex flex-row darken pt-1 pb-1 px-1 mb-2">
+    <div class="flex flex-row darken pt-1 pb-1 px-1 mb-2 draggable">
       <div class="text-yellow-200 my-auto">About EasyRunes</div>
       <div class="mx-auto"></div>
       <button class="my-auto mx-1 focus:outline-none" type="button" id="close"><img class="rounded-full w-4 h-4" src="../img/close.png" /></button>
@@ -20,33 +18,60 @@
     <h1 class="text-center text-yellow-200 font-bold text-3xl">About EasyRunes</h1>
     <hr class="bg-yellow-200 my-5" />
     <p class="text-yellow-200 font-light text-md px-5 mb-5">
-      EasyRunes uses statistics from <a class="underline" href="javascript:shell.openExternal('https://koreanbuilds.net/')">KoreanBuilds</a> and data from <a class="underline" href="javascript:shell.openExternal('https://developer.riotgames.com/')">Riot API</a>.
-      <br />
-      KoreanBuilds data is obtained from match history from summoners in Korea that are Master and above. Some champions do not have available runes page on them because there are insufficient data that can be calculated reliably. More info can be found on <a class="underline" href="javascript:shell.openExternal('https://koreanbuilds.net/faq')">KoreanBuilds FAQ</a>.
+      EasyRunes uses statistics from
+      <a class="underline" href="javascript:shell.openExternal('https://lolalytics.com/')">LoLalytics</a>
+      and data from
+      <a class="underline" href="javascript:shell.openExternal('https://developer.riotgames.com/')">Riot API</a>
+      .
     </p>
     <p class="text-yellow-200 font-bold text-md px-5 underline">How to Use</p>
     <ol class="text-yellow-200 font-light text-md px-5 list-decimal list-inside mb-5">
-      <li>Launch EasyRunes and pick a champion in Champ Select.</li>
-      <li>Runes will be fetched and loaded for you.</li>
+      <li>Enter your LeagueClient.exe path in the field below and save it.</li>
+      <li>Pick a champion in Champion Selection.</li>
+      <li>Runes will be fetched and loaded for you automatically based on Highest Winrate or Highest Pickrate.</li>
       <li>Click on the upload button to upload the runes to your client.</li>
     </ol>
     <p class="text-yellow-200 font-bold text-md px-5 underline">App</p>
     <p class="text-yellow-200 font-light text-md px-5 mb-5">
-      Version: 1.0.1
+      Version: 1.0.2
       <br />
-      Released: 31 May 2020
+      Released: 21 Oct 2021
       <br />
-      GitHub: <a class="underline" href="javascript:shell.openExternal('https://github.com/lowyiyiu/EasyRunes')">https://github.com/lowyiyiu/EasyRunes</a>
+      GitHub:
+      <a class="underline" href="javascript:shell.openExternal('https://github.com/lowyiyiu/EasyRunes')">https://github.com/lowyiyiu/EasyRunes</a>
     </p>
     <p class="text-yellow-200 font-light text-xs px-5">EasyRunes isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.</p>
+    <form class="p-5 space-y-2" onsubmit="return fSubmit()">
+      <div>
+        <label for="text" class="sr-only">LeagueClient.exe path</label>
+        <input type="text" name="path" id="path" class="shadow-sm focus:ring-yellow-500 focus:border-yellow-500 block w-full sm:text-sm border-gray-300 rounded-md text-white px-1" placeholder="C:\\Garena\\Games\\32771\\LeagueClient\\LeagueClient.exe" />
+      </div>
+      <button class="mx-auto focus:outline-none p-1 rounded-md border-2 border-yellow-200 overflow-hidden text-white w-full" type="submit">Save and close</button>
+    </form>
     <script type="text/javascript">
-      const { shell } = require("electron");
-      let freezer = require("../js/state");
-      require("../js/app.js");
+      const { shell, ipcRenderer } = require('electron');
+      const os = require('os');
+      const storage = require('electron-json-storage');
 
-      document.getElementById("close").addEventListener("click", () => {
-        freezer.emit("app:infoquit");
+      storage.setDataPath(os.tmpdir() + '\\EasyRunes\\');
+
+      if (storage.getSync('leagueclientpath') && Object.keys(storage.getSync('leagueclientpath')).length === 0 && Object.getPrototypeOf(storage.getSync('leagueclientpath')) === Object.prototype) {
+        document.getElementById('path').value = '';
+      } else {
+        document.getElementById('path').value = storage.getSync('leagueclientpath');
+      }
+
+      document.getElementById('close').addEventListener('click', () => {
+        ipcRenderer.send('app:infoquit');
       });
+
+      function fSubmit() {
+        storage.set('leagueclientpath', document.getElementById('path').value, function (error) {
+          if (error) throw error;
+        });
+        ipcRenderer.send('app:restart');
+        return false;
+      }
     </script>
   </body>
 </html>
