@@ -59,7 +59,7 @@ function createMainWindow() {
 
 function createInfoWindow() {
   const infoWidth = 520;
-  const infoHeight = 580;
+  const infoHeight = 620;
 
   const infoWindowState = windowStateKeeper({
     defaultWidth: infoWidth,
