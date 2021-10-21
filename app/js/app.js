@@ -40,16 +40,14 @@ function doOnSessionUpdate(data) {
   let champion = '';
   if (data) freezer.get().current.set('session', true);
   if (!action) return;
-  if (data.timer.phase !== 'FINALIZATION') {
-    let champions = freezer.get().champions;
-    champion = Object.keys(champions).find((el) => champions[el].key == action.championId);
-    if (champion === undefined) {
-      log('Error', 'No champion selected');
-      return;
-    }
-    freezer.emit('champion:choose', champion);
-    log('Info', champion + ' selected');
+  let champions = freezer.get().champions;
+  champion = Object.keys(champions).find((el) => champions[el].key == action.championId);
+  if (champion === undefined) {
+    log('Error', 'No champion selected');
+    return;
   }
+  freezer.emit('champion:choose', champion);
+  log('Info', champion + ' selected');
 }
 
 function fetchRunesPage(champion) {
