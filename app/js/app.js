@@ -40,32 +40,35 @@ function doOnSessionUpdate(data) {
   let champion = '';
   if (data) freezer.get().current.set('session', true);
   if (!action) return;
-  if (data.timer.phase !== 'FINALIZATION') {
-    let champions = freezer.get().champions;
-    champion = Object.keys(champions).find((el) => champions[el].key == action.championId);
-    if (champion === undefined) {
-      log('Error', 'No champion selected');
-      return;
-    }
-    freezer.emit('champion:choose', champion);
-    log('Info', champion + ' selected');
+  let champions = freezer.get().champions;
+  champion = Object.keys(champions).find((el) => champions[el].key == action.championId);
+  if (champion === undefined) {
+    log('Error', 'No champion selected');
+    return;
   }
+  freezer.emit('champion:choose', champion);
+  log('Info', champion + ' selected');
 }
 
 function fetchRunesPage(champion) {
   const base_url = 'https://axe.lolalytics.com/mega/';
   const patch_number = freezer.get().apiVersion;
   const champion_id = freezer.get().champions[champion].key;
-  const queue_id = document.getElementById('queue').value;
+  const queue = document.getElementById('queue').value;
+  const type = document.getElementById('type').value;
+  const rank = document.getElementById('rank').value;
 
   return new Promise((resolve, reject) => {
-    request(base_url + `?ep=champion&p=d&v=1&patch=${patch_number}&cid=${champion_id}&lane=default&tier=platinum_plus&queue=${queue_id}&region=all`, function (error, response, data) {
+    request(base_url + `?ep=champion&p=d&v=1&patch=${patch_number}&cid=${champion_id}&lane=default&tier=${rank}&queue=${queue}&region=all`, function (error, response, data) {
       if (!error && response && response.statusCode == 200) {
+        if (!('summary' in JSON.parse(data))) {
+          resolve(null);
+          return;
+        }
         let runes = JSON.parse(data).summary.runes;
-        let choice = runes.win.n > 15000 ? 'WR' : 'PR';
-        let selected_runes = runes.win.n > 15000 ? runes.win.set : runes.pick.set;
+        let selected_runes = type === 'WR' ? runes.win.set : runes.pick.set;
         let page = {
-          name: `EasyRunes: ${champion} ${document.getElementById('queue').options[document.getElementById('queue').selectedIndex].text} ${choice}`,
+          name: `EasyRunes: ${champion} ${document.getElementById('queue').options[document.getElementById('queue').selectedIndex].text} ${type}`,
           primaryStyleId: -1,
           selectedPerkIds: [0, 0, 0, 0, 0, 0, 0, 0, 0],
           subStyleId: -1,
@@ -84,14 +87,30 @@ function fetchRunesPage(champion) {
         log('Info', "Fetched runes page from state's list");
         resolve(page);
       } else {
-        log('Error', 'Runes not found for ' + champion);
-        reject(null);
+        log('Error', 'Runes not found!');
+        resolve(null);
       }
     });
   });
 }
 
 document.getElementById('queue').addEventListener('change', () => {
+  api.get('/lol-champ-select/v1/session').then((data) => {
+    if (data) {
+      doOnSessionUpdate(data);
+    }
+  });
+});
+
+document.getElementById('type').addEventListener('change', () => {
+  api.get('/lol-champ-select/v1/session').then((data) => {
+    if (data) {
+      doOnSessionUpdate(data);
+    }
+  });
+});
+
+document.getElementById('rank').addEventListener('change', () => {
   api.get('/lol-champ-select/v1/session').then((data) => {
     if (data) {
       doOnSessionUpdate(data);

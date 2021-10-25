@@ -9,8 +9,8 @@ Download latest release [here](https://github.com/lowyiyiu/EasyRunes/releases/la
 # How to Use
 
 1. Enter your LeagueClient.exe path in the info field and save it.
-2. Pick a champion in Champion Selection.
-3. Runes will be fetched and loaded for you automatically based on Highest Winrate or Highest Pickrate.
+2. Choose your Game Mode, Build Type, and Tier List.
+3. Pick a champion in Champion Selection.
 4. Click on the upload button to upload the runes to your client.
 
 # [License](https://github.com/lowyiyiu/EasyRunes/tree/master/LICENSE)

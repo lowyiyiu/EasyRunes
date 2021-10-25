@@ -17,11 +17,22 @@
         <button class="my-auto mx-1 focus:outline-none" type="button" id="close"><img class="rounded-full w-4 h-4" src="../img/close.png" /></button>
       </div>
     </div>
-    <div>
+    <div class="flex flex-row gap-2">
       <select class="text-yellow-200" id="queue">
-        <option value="420">SR</option>
-        <option value="450">ARAM</option>
         <option value="900">URF</option>
+        <option value="450">ARAM</option>
+        <option value="420">SR</option>
+      </select>
+      <select class="text-yellow-200" id="type">
+        <option value="PR">PR</option>
+        <option value="WR">WR</option>
+      </select>
+      <select class="text-yellow-200" id="rank">
+        <option value="challenger">Challenger</option>
+        <option value="master_plus">Master+</option>
+        <option value="diamond_plus">Diamond+</option>
+        <option value="platinum_plus" selected>Platinum+</option>
+        <option value="gold_plus">Gold+</option>
       </select>
     </div>
     <div class="grid grid-cols-11 gap-2 p-2">
@@ -35,7 +46,7 @@
       <img id="perk-7" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
       <img id="perk-8" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
       <img id="perk-9" class="rounded-full border-2 border-yellow-200 my-auto" src="../img/perk/qm.png" />
-      <p id="error" class="my-auto mx-auto col-span-9 text-yellow-200 hidden">Runes not found for this champion</p>
+      <p id="error" class="my-auto mx-auto col-span-9 text-yellow-200 hidden">Runes not found!</p>
       <button class="mx-auto focus:outline-none cursor-not-allowed p-1 rounded-md border-2 border-yellow-200 overflow-hidden disabled:opacity-10" type="button" id="upload" disabled><img src="../img/send.png" id="spinner" /></button>
     </div>
 
