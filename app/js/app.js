@@ -35,7 +35,28 @@ function log(status, message) {
   console.log('[' + d.getDate() + '/' + d.getMonth() + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + '] ' + status.toUpperCase() + ': ' + message);
 }
 
+function setStatus(status) {
+  const container = document.getElementById('status');
+  log('STATUS', status);
+  if (status === 'disconnected') {
+    container.children[0].classList.remove('hidden');
+    container.children[1].classList.add('hidden');
+    container.children[2].classList.add('hidden');
+  }
+  if (status === 'connected') {
+    container.children[0].classList.add('hidden');
+    container.children[1].classList.remove('hidden');
+    container.children[2].classList.add('hidden');
+  }
+  if (status === 'active') {
+    container.children[0].classList.add('hidden');
+    container.children[1].classList.add('hidden');
+    container.children[2].classList.remove('hidden');
+  }
+}
+
 function doOnSessionUpdate(data) {
+  setStatus('active');
   let action = data.myTeam.find((el) => data.localPlayerCellId === el.cellId);
   let champion = '';
   if (data) freezer.get().current.set('session', true);
@@ -286,18 +307,21 @@ freezer.on('/lol-champ-select/v1/session:Delete', () => {
     document.getElementById('perk-' + i).classList.remove('hidden');
     document.getElementById('perk-' + i).src = '../img/perk/qm.png';
   }
+  setStatus('connected');
 });
 
 connector.on('connect', (data) => {
   log('Info', 'Connected to client');
   api.bind(data);
   log('Info', 'Established websocket to client');
+  setStatus('connected');
 });
 
 connector.on('disconnect', () => {
   log('Info', 'Disconnected from client');
   api.destroy();
   log('Info', 'Websocket destroyed');
+  setStatus('disconnected');
 });
 
 request('https://ddragon.leagueoflegends.com/api/versions.json', function (error, response, data) {

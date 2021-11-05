@@ -54,7 +54,7 @@ function createMainWindow() {
   });
 
   main.loadFile('./app/html/index.html');
-  // main.webContents.openDevTools();
+  main.webContents.openDevTools();
 }
 
 function createInfoWindow() {
@@ -91,7 +91,7 @@ function createInfoWindow() {
   info.center();
 
   info.loadFile('./app/html/info.html');
-  // info.webContents.openDevTools();
+  info.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
