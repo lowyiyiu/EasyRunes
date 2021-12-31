@@ -25,6 +25,9 @@ var state = {
     data: null,
     list: {},
   },
+  lolalytics: {
+    patch: {},
+  },
   champions: {},
 };
 

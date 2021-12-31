@@ -73,11 +73,15 @@ function doOnSessionUpdate(data) {
 
 function fetchRunesPage(champion) {
   const base_url = 'https://axe.lolalytics.com/mega/';
-  const patch_number = freezer.get().apiVersion;
   const champion_id = freezer.get().champions[champion].key;
   const queue = document.getElementById('queue').value;
   const type = document.getElementById('type').value;
   const rank = document.getElementById('rank').value;
+  let patch_number = freezer.get().apiVersion;
+
+  if (queue in freezer.get().lolalytics.patch) {
+    patch_number = freezer.get().lolalytics.patch[queue];
+  }
 
   return new Promise((resolve, reject) => {
     request(base_url + `?ep=champion&p=d&v=1&patch=${patch_number}&cid=${champion_id}&lane=default&tier=${rank}&queue=${queue}&region=all`, function (error, response, data) {
@@ -324,10 +328,19 @@ connector.on('disconnect', () => {
   setStatus('disconnected');
 });
 
+request('https://pastebin.com/raw/Ydsthemt', function (error, response, data) {
+  if (!error && response && response.statusCode == 200) {
+    freezer.get().lolalytics.set('patch', JSON.parse(data));
+    log('Info', 'Fetched supported patch version');
+  } else {
+    log('Error', 'Unable to fetch supported patch version');
+  }
+});
+
 request('https://ddragon.leagueoflegends.com/api/versions.json', function (error, response, data) {
   if (!error && response && response.statusCode == 200) {
     freezer.get().set('apiVersion', JSON.parse(data)[0]);
-    log('Info', 'Fetched API Version');
+    log('Info', 'Fetched API version');
     request('http://ddragon.leagueoflegends.com/cdn/' + JSON.parse(data)[0] + '/data/en_US/champion.json', function (error, response, data) {
       if (!error && response && response.statusCode == 200) {
         freezer.get().set('champions', JSON.parse(data).data);
@@ -335,7 +348,7 @@ request('https://ddragon.leagueoflegends.com/api/versions.json', function (error
       }
     });
   } else {
-    log('Error', 'Unable to fetch API Version');
+    log('Error', 'Unable to fetch API version');
   }
 });
 
