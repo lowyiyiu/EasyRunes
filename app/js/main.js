@@ -4,7 +4,6 @@ const electron = require('electron');
 const request = require('request');
 const windowStateKeeper = require('electron-window-state');
 const { app, BrowserWindow, ipcMain, dialog } = electron;
-let freezer = require('./state');
 let main;
 let info;
 
@@ -58,8 +57,8 @@ function createMainWindow() {
 }
 
 function createInfoWindow() {
-  const infoWidth = 520;
-  const infoHeight = 620;
+  const infoWidth = 650;
+  const infoHeight = 830;
 
   const infoWindowState = windowStateKeeper({
     defaultWidth: infoWidth,
@@ -110,6 +109,21 @@ app.on('activate', () => {
     createMainWindow();
     createInfoWindow();
   }
+});
+
+ipcMain.on('app:selectfile', (event, arg) => {
+  dialog
+    .showOpenDialog({
+      properties: ['openFile'],
+    })
+    .then((result) => {
+      if (!result.canceled) {
+        info.webContents.send('selectedfile', result.filePaths[0]);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 ipcMain.on('app:quit', (event, arg) => {

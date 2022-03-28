@@ -7,10 +7,11 @@ const os = require('os');
 const storage = require('electron-json-storage');
 let freezer = require('./state');
 
-storage.setDataPath(os.tmpdir() + '\\EasyRunes\\');
+storage.setDataPath(os.homedir() + '\\.easyrunes\\');
 
 if (storage.getSync('leagueclientpath') && Object.keys(storage.getSync('leagueclientpath')).length === 0 && Object.getPrototypeOf(storage.getSync('leagueclientpath')) === Object.prototype) {
   freezer.get().set('leaguePath', '');
+  ipcRenderer.send('app:info');
 } else {
   freezer.get().set('leaguePath', storage.getSync('leagueclientpath'));
 }
@@ -197,7 +198,7 @@ freezer.on('champion:choose', async (champion) => {
     if (page === null) {
       log('Error', 'No runes data for this champion');
       for (let i = 1; i < 10; i++) {
-        document.getElementById('perk-' + i).src = '../img/perk/qm.png';
+        document.getElementById('perk-' + i).src = '../img/runes/qm.png';
         document.getElementById('perk-' + i).classList.add('hidden');
       }
       document.getElementById('error').classList.remove('hidden');
@@ -212,7 +213,7 @@ freezer.on('champion:choose', async (champion) => {
     document.getElementById('upload').disabled = false;
     for (let i = 1; i < 10; i++) {
       document.getElementById('perk-' + i).classList.remove('hidden');
-      document.getElementById('perk-' + i).src = '../img/perk/' + page.selectedPerkIds[i - 1] + '.png';
+      document.getElementById('perk-' + i).src = '../img/runes/' + page.selectedPerkIds[i - 1] + '.png';
     }
   }
 });
@@ -309,7 +310,7 @@ freezer.on('/lol-champ-select/v1/session:Delete', () => {
   document.getElementById('champion').src = '../img/unknown.png';
   for (let i = 1; i < 10; i++) {
     document.getElementById('perk-' + i).classList.remove('hidden');
-    document.getElementById('perk-' + i).src = '../img/perk/qm.png';
+    document.getElementById('perk-' + i).src = '../img/runes/qm.png';
   }
   setStatus('connected');
 });

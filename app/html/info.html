@@ -31,29 +31,38 @@
       <li>Pick a champion in Champion Selection.</li>
       <li>Click on the upload button to upload the runes to your client.</li>
     </ol>
+    <p class="text-yellow-200 font-bold text-md px-5 underline">Status Indicator</p>
+    <ol class="text-yellow-200 font-light text-md px-5 list-decimal list-inside mb-5">
+      <li>There are four stages for the flashing indicator (Can be found below the exit button).</li>
+      <li><b>None:</b> There's an issue with your LeagueClient.exe path.</li>
+      <li><b>Red:</b> EasyRunes isn't able to detect your League Client. Either it's not launched or something went wrong.</li>
+      <li><b>Yellow:</b> EasyRunes has attached itself to your League Client and is waiting for you to get into a champion selection screen.</li>
+      <li><b>Green:</b> EasyRunes is waiting for you to lock in a champion.</li>
+    </ol>
     <p class="text-yellow-200 font-bold text-md px-5 underline">App</p>
     <p class="text-yellow-200 font-light text-md px-5 mb-5">
-      Version: 1.0.5
+      Version: 1.0.6
       <br />
-      Released: 5 Nov 2021
+      Released: 28 Mar 2022
       <br />
       GitHub:
       <a class="underline" href="javascript:shell.openExternal('https://github.com/lowyiyiu/EasyRunes')">https://github.com/lowyiyiu/EasyRunes</a>
     </p>
     <p class="text-yellow-200 font-light text-xs px-5">EasyRunes isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.</p>
-    <form class="p-5 space-y-2" onsubmit="return fSubmit()">
+    <form class="p-5 space-y-2" onsubmit="formSubmit()">
       <div>
         <label for="text" class="sr-only">LeagueClient.exe path</label>
         <input type="text" name="path" id="path" class="shadow-sm focus:ring-yellow-500 focus:border-yellow-500 block w-full sm:text-sm border-gray-300 rounded-md text-white px-1" placeholder="C:\\Garena\\Games\\32771\\LeagueClient\\LeagueClient.exe" />
       </div>
+      <button class="mx-auto focus:outline-none p-1 rounded-md border-2 border-yellow-200 overflow-hidden text-white w-full" type="button" onclick="openFileDialog()">Browse</button>
       <button class="mx-auto focus:outline-none p-1 rounded-md border-2 border-yellow-200 overflow-hidden text-white w-full" type="submit">Save and close</button>
     </form>
-    <script type="text/javascript">
+    <script>
       const { shell, ipcRenderer } = require('electron');
       const os = require('os');
       const storage = require('electron-json-storage');
 
-      storage.setDataPath(os.tmpdir() + '\\EasyRunes\\');
+      storage.setDataPath(os.homedir() + '\\.easyrunes\\');
 
       if (storage.getSync('leagueclientpath') && Object.keys(storage.getSync('leagueclientpath')).length === 0 && Object.getPrototypeOf(storage.getSync('leagueclientpath')) === Object.prototype) {
         document.getElementById('path').value = '';
@@ -65,13 +74,21 @@
         ipcRenderer.send('app:infoquit');
       });
 
-      function fSubmit() {
+      function formSubmit() {
         storage.set('leagueclientpath', document.getElementById('path').value, function (error) {
           if (error) throw error;
         });
         ipcRenderer.send('app:restart');
         return false;
       }
+
+      function openFileDialog() {
+        ipcRenderer.send('app:selectfile');
+      }
+
+      ipcRenderer.on('selectedfile', (event, arg) => {
+        document.getElementById('path').value = arg;
+      });
     </script>
   </body>
 </html>
