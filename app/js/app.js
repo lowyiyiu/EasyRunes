@@ -329,9 +329,15 @@ connector.on('disconnect', () => {
   setStatus('disconnected');
 });
 
-request('https://pastebin.com/raw/Ydsthemt', function (error, response, data) {
+request('https://pastebin.com/raw/HdMBN4YR', function (error, response, data) {
   if (!error && response && response.statusCode == 200) {
-    freezer.get().lolalytics.set('patch', JSON.parse(data));
+    let queues = JSON.parse(data).queues;
+    let temp = {};
+    for (let i = 0; i < queues.length; i++) {
+      temp[queues[i].queueId] = queues[i].patch;
+      document.getElementById('queue').innerHTML += '<option value="' + queues[i].queueId + '">' + queues[i].name + '</option>';
+    }
+    freezer.get().lolalytics.set('patch', temp);
     log('Info', 'Fetched supported patch version');
   } else {
     log('Error', 'Unable to fetch supported patch version');
