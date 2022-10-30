@@ -79,13 +79,26 @@ function fetchRunesPage(champion) {
   const type = document.getElementById('type').value;
   const rank = document.getElementById('rank').value;
   let patch_number = freezer.get().apiVersion;
+  let auto_queue_number = queue;
+
+  if (queue === 'auto') {
+    api.get('/lol-lobby/v2/lobby').then((data) => {
+      if (data) {
+        if (data.gameConfig.queueId in freezer.get().lolalytics.patch) {
+          auto_queue_number = data.gameConfig.queueId;
+        } else {
+          auto_queue_number = '420';
+        }
+      }
+    });
+  }
 
   if (queue in freezer.get().lolalytics.patch) {
     patch_number = freezer.get().lolalytics.patch[queue];
   }
 
   return new Promise((resolve, reject) => {
-    request(base_url + `?ep=champion&p=d&v=1&patch=${patch_number}&cid=${champion_id}&lane=default&tier=${rank}&queue=${queue}&region=all`, function (error, response, data) {
+    request(base_url + `?ep=champion&p=d&v=1&patch=${patch_number}&cid=${champion_id}&lane=default&tier=${rank}&queue=${queue === auto_queue_number ? queue : auto_queue_number}&region=all`, function (error, response, data) {
       if (!error && response && response.statusCode == 200) {
         if (!('summary' in JSON.parse(data))) {
           resolve(null);
@@ -94,7 +107,7 @@ function fetchRunesPage(champion) {
         let runes = JSON.parse(data).summary.runes;
         let selected_runes = type === 'WR' ? runes.win.set : runes.pick.set;
         let page = {
-          name: `EasyRunes: ${champion} ${document.getElementById('queue').options[document.getElementById('queue').selectedIndex].text} ${type}`,
+          name: `EasyRunes: ${champion} ${queue === auto_queue_number ? document.getElementById('queue').options[document.getElementById('queue').selectedIndex].text : 'AUTO'} ${type}`,
           primaryStyleId: -1,
           selectedPerkIds: [0, 0, 0, 0, 0, 0, 0, 0, 0],
           subStyleId: -1,
