@@ -69,7 +69,7 @@
 
       <div>
         <p class="text-yellow-200 font-light text-xs">
-          <b>Version:</b> <span id="version"></span>
+          <b>Version:</b> 1.0.14</span>
           <br />
           <b>GitHub:</b> <a class="underline" href="javascript:shell.openExternal('https://github.com/lowyiyiu/EasyRunes')">https://github.com/lowyiyiu/EasyRunes</a>
           <br />
@@ -97,8 +97,6 @@
     </div>
 
     <script>
-      document.getElementById('version').innerHTML = process.env.npm_package_version;
-
       const { shell, ipcRenderer } = require('electron');
       const os = require('os');
       const storage = require('electron-json-storage');

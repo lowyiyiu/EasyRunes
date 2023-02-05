@@ -72,7 +72,21 @@ function doOnSessionUpdate(data) {
   log('Info', champion + ' selected');
 }
 
-function fetchRunesPage(champion) {
+function getCurrentQueue() {
+  return new Promise((resolve) => {
+    api.get('/lol-lobby/v2/lobby').then((data) => {
+      if (data) {
+        if (data.gameConfig.queueId in freezer.get().lolalytics.patch) {
+          resolve(data.gameConfig.queueId);
+        } else {
+          resolve(420);
+        }
+      }
+    });
+  });
+}
+
+async function fetchRunesPage(champion) {
   const base_url = 'https://axe.lolalytics.com/mega/';
   const champion_id = freezer.get().champions[champion].key;
   const queue = document.getElementById('queue').value;
@@ -82,15 +96,7 @@ function fetchRunesPage(champion) {
   let auto_queue_number = queue;
 
   if (queue === 'auto') {
-    api.get('/lol-lobby/v2/lobby').then((data) => {
-      if (data) {
-        if (data.gameConfig.queueId in freezer.get().lolalytics.patch) {
-          auto_queue_number = data.gameConfig.queueId;
-        } else {
-          auto_queue_number = '420';
-        }
-      }
-    });
+    auto_queue_number = await getCurrentQueue();
   }
 
   if (queue in freezer.get().lolalytics.patch) {
