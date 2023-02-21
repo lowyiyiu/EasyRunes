@@ -76,7 +76,7 @@ function getCurrentQueue() {
   return new Promise((resolve) => {
     api.get('/lol-lobby/v2/lobby').then((data) => {
       if (data) {
-        if (data.gameConfig.queueId in freezer.get().lolalytics.patch) {
+        if (data.gameConfig.queueId in freezer.get().lolalytics.patch || data.gameConfig.queueId === 420 || data.gameConfig.queueId === 450) {
           resolve(data.gameConfig.queueId);
         } else {
           resolve(420);
