@@ -87,7 +87,7 @@ function getCurrentQueue() {
 }
 
 async function fetchRunesPage(champion) {
-  const base_url = 'https://axe.lolalytics.com/mega/';
+  const base_url = 'https://ax.lolalytics.com/mega/';
   const champion_id = freezer.get().champions[champion].key;
   const queue = document.getElementById('queue').value;
   const type = document.getElementById('type').value;
