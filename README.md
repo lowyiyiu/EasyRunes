@@ -13,6 +13,10 @@ Download latest release [here](https://github.com/lowyiyiu/EasyRunes/releases/la
 3. Pick a champion in Champion Selection.
 4. Click on the upload button to upload the runes to your client.
 
+# Other Tools
+
+[League of Legends - 5v5 Practice Tool](https://github.com/lowyiyiu/League-of-Legends-5v5-Practice-Tool)
+
 # [License](https://github.com/lowyiyiu/EasyRunes/tree/master/LICENSE)
 
 EasyRunes uses statistics from [LoLalytics](https://lolalytics.com/) and data from [Riot API](https://developer.riotgames.com/).
