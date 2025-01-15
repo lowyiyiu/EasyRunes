@@ -1,3 +1,5 @@
+We can now get suggestions in game so it's time to archive the project.
+
 # EasyRunes
 
 Automate runes selection process for League of Legends
